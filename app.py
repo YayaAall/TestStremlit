@@ -6,30 +6,34 @@ co = cohere.Client('U3Ry9mhGsRoRvRY2kExN0uIa9cDplypLLllAVSGP')
 
 def generate_idea(industry, temperature):
     prompt = f"""
-Generate a startup idea given the industry. Return the startup idea and without additional commentary.
+    Generate a startup idea given the industry. Return the startup idea and without additional commentary.
 
-Industry: Workplace
-Startup Idea: A platform that generates slide deck contents automatically based on a given outline
+    Industry: Workplace
+    Startup Idea: A platform that generates slide deck contents automatically based on a given outline
 
-Industry: Home Decor
-Startup Idea: An app that calculates the best position of your indoor plants for your apartment
+    Industry: Home Decor
+    Startup Idea: An app that calculates the best position of your indoor plants for your apartment
 
-Industry: Healthcare
-Startup Idea: A hearing aid for the elderly that automatically adjusts its levels and with a battery lasting a whole week
+    Industry: Healthcare
+    Startup Idea: A hearing aid for the elderly that automatically adjusts its levels and with a battery lasting a whole week
 
-Industry: Education
-Startup Idea: An online primary school that lets students mix and match their own curriculum based on their interests and goals
+    Industry: Education
+    Startup Idea: An online primary school that lets students mix and match their own curriculum based on their interests and goals
 
-Industry: {industry}
-Startup Idea:"""
+    Industry: {industry}
+    Startup Idea:"""
 
-    # Appel au point de terminaison Chat de Cohere
-    response = co.chat( 
+    # Call the Cohere Chat endpoint
+    try:
+        response = co.chat(
             messages=[{"role": "user", "content": prompt}],
             model="command-r-plus-08-2024", 
-            temperature=temperature)
-    
-    return response.generations[0].message['text']
+            temperature=temperature
+        )
+        return response.message.content[0].text
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        return "Error generating idea."
 
 def generate_name(idea, temperature):
     prompt = f"""
