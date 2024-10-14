@@ -6,7 +6,7 @@ co = cohere.Client('U3Ry9mhGsRoRvRY2kExN0uIa9cDplypLLllAVSGP')
 
 def generate_idea(industry, temperature):
     prompt = f"""
-    Generate a startup idea given the industry. Return the startup idea and without additional commentary.
+    Generate a startup idea given the industry. Return the startup idea without additional commentary.
 
     Industry: Workplace
     Startup Idea: A platform that generates slide deck contents automatically based on a given outline
@@ -23,43 +23,45 @@ def generate_idea(industry, temperature):
     Industry: {industry}
     Startup Idea:"""
 
-    # Call the Cohere Chat endpoint
-    try:
-        response = co.chat(
-            messages=[{"role": "user", "content": prompt}],
-            model="command-r-plus-08-2024", 
-            temperature=temperature
-        )
-        return response.message.content[0].text
-    except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
-        return "Error generating idea."
+    # Utiliser la méthode generate() au lieu de chat()
+    response = co.generate(
+        model='command-r-plus-08-2024',
+        prompt=prompt,
+        max_tokens=50,
+        temperature=temperature
+    )
+
+    return response.generations[0].text.strip()
+
 
 def generate_name(idea, temperature):
     prompt = f"""
-Generate a startup name given the startup idea. Return the startup name and without additional commentary.
+    Generate a startup name given the startup idea. Return the startup name without additional commentary.
 
-Startup Idea: A platform that generates slide deck contents automatically based on a given outline
-Startup Name: Deckerize
+    Startup Idea: A platform that generates slide deck contents automatically based on a given outline
+    Startup Name: Deckerize
 
-Startup Idea: An app that calculates the best position of your indoor plants for your apartment
-Startup Name: Planteasy 
+    Startup Idea: An app that calculates the best position of your indoor plants for your apartment
+    Startup Name: Planteasy 
 
-Startup Idea: A hearing aid for the elderly that automatically adjusts its levels and with a battery lasting a whole week
-Startup Name: Hearspan
+    Startup Idea: A hearing aid for the elderly that automatically adjusts its levels and with a battery lasting a whole week
+    Startup Name: Hearspan
 
-Startup Idea: An online primary school that lets students mix and match their own curriculum based on their interests and goals
-Startup Name: Prime Age
+    Startup Idea: An online primary school that lets students mix and match their own curriculum based on their interests and goals
+    Startup Name: Prime Age
 
-Startup Idea: {idea}
-Startup Name:"""
+    Startup Idea: {idea}
+    Startup Name:"""
 
-    # Appel au point de terminaison Chat de Cohere
-    response = co.chat( 
-            messages=[{"role": "user", "content": prompt}],
-            model="command-r-plus-08-2024")
-    
-    return response.generations[0].message['text']
+    # Utiliser la méthode generate() au lieu de chat()
+    response = co.generate(
+        model='command-r-plus-08-2024',
+        prompt=prompt,
+        max_tokens=10,
+        temperature=temperature
+    )
+
+    return response.generations[0].text.strip()
 
 st.title("🚀 Startup Idea Generator")
 
